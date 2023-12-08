@@ -59,8 +59,19 @@ def ask_ai():
         # display(Markdown(f"Response: <b>{response.response}</b>"))
         print(f"\nResponse:\n\t{response.response}\n")
 
-# if __name__ == "__main__":
-#     print("Starting...")
-#     construct_index("./data")
-#     print("Data construction done ...")
-#     ask_ai()
+
+def ask_ai_st(query):
+    # index = GPTVectorStoreIndex.load_from_disk('index.json')
+    # rebuild storage context
+    storage_context = StorageContext.from_defaults(persist_dir="./storage")
+
+    # load index
+    index = load_index_from_storage(storage_context)
+    query_engine = index.as_query_engine()
+    print("Asking loop starting ...")
+    
+    template = f" Use the information that has been provided through the document you're trained on to answer the following question: {query}"
+        
+    response = query_engine.query(template)
+
+    return response
