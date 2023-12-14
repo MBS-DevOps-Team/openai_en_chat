@@ -5,6 +5,8 @@ import sys
 import os
 from dotenv import load_dotenv, find_dotenv
 from IPython.display import Markdown, display
+import warnings
+warnings.filterwarnings("ignore")
 
  # Read local .env file to acquire necessary API keys
 load_dotenv(find_dotenv())

@@ -1,11 +1,13 @@
-# from talk_to_docs_pdf_txt_from_dir import ask_ai_st
 import streamlit as st
+from streamlit_extras.mention import mention
 from streamlit_extras.app_logo import add_logo
 import streamlit_image_coordinates
 from PIL import Image
 
 import os
 from dotenv import load_dotenv, find_dotenv
+import warnings
+warnings.filterwarnings("ignore")
 
 import openai
 from llama_index import load_index_from_storage, StorageContext
@@ -52,13 +54,17 @@ def main():
 
     if prompt:
         # Added to storage
-        st.session_state.messages.append({"role": "user", "content":prompt})
+        st.session_state.messages.append({
+            "role": "user",
+            "content":prompt
+            })
         # Display whay was typed
         with st.chat_message("user"):
             st.write(prompt)
 
         # process with LLM or NLP
-        response = "respond" # ask_ai_st(prompt)
+        # st.spinner("Thinking...")
+        response = ask_ai_st(prompt)
 
         # Store response
         st.session_state.messages.append({"role":"assistant", "content":response})
@@ -70,35 +76,18 @@ def main():
     # Sidebar to the 
     with st.sidebar:        
         # Titles
-        # # Define custom HTML element for Arabic title
-        # html_title_ar = """
-        # <div style="text-align: center; padding: 10px 0;">
-        # <h1 style="color: #ff3900; font-weight: bold; text-align: center;">
-        # دليل منظومة القياس والتقويم بجامعة عين شمس
-        # </h1>
-        # </div>
-        # """
-        # st.markdown(html_title_ar, unsafe_allow_html=True)
-
-        # # Define custom HTML element for English title
-        # html_string = """
-        # <div style="text-align: center; padding: 5px 0;">
-        # <h2 style="color: #00008b; font-weight: bold; text-align: center;">
-        # Guide to the measurement and evaluation system at Ain Shams University
-        # </h2>
-        # </div>
-        # """
-        
-        # st.header("Guide to the measurement and evaluation system at Ain Shams University")
-        # st.header("دليل منظومة القياس والتقويم بجامعة عين شمس")
-
         image_01 = Image.open("media/banner-1-removebg.png")
         st.image(image_01, use_column_width=True)
 
-        options = ["English", "Arabic"]
+        options = ["English (default)", "Arabic (under development...)"]
         st.subheader(":blue[Choose conversation langugage: ]")
         # st.subheader(":green['اختر لغة للحوار مع الدليل']")
-        selected_option = st.selectbox("", options=options, index=1)
+        selected_option = st.selectbox("", options=options, index=0)
+        mention(
+            label="Meet the developer",
+            icon="💻",  # Some icons are available... like Streamlit!
+            url="https://www.linkedin.com/in/nourmibrahimmbs/",
+        )
 
         # if st.button("Process"):
         #     with st.spinner("processing..."):
